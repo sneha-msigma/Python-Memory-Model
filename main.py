@@ -1,45 +1,42 @@
 # main.py
 
-import argparse
-import importlib.util
-import os
+import sys
+import importlib
+from memcourt.snapshot import Snapshot
+from memcourt.cli import show
 
-from memcourt.snapshot import take_snapshot
-from memcourt.diff import diff
-from memcourt.cli import print_all
+
+def run_case(title, make, change, json_out):
+    print(f"\n{title}")
+
+    data = make()
+    before = Snapshot(data)
+
+    change(data)
+    after = Snapshot(data)
+
+    diff = before.diff(after)
+    show(before, after, diff, json_out)
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Heap Snapshot Engine")
-    parser.add_argument("command", choices=["analyze"])
-    parser.add_argument("script")
-    parser.add_argument("--json", action="store_true")
+    script_name = sys.argv[2].replace(".py", "")
+    script = importlib.import_module(script_name)
+    json_out = "--json" in sys.argv
 
-    args = parser.parse_args()
+    run_case(
+        "Aliasing Case",
+        script.alias_make,
+        script.alias_change,
+        json_out
+    )
 
-    # LOAD SCRIPT BY FILE PATH (IMPORTANT FIX) 
-    script_path = os.path.abspath(args.script)
-
-    spec = importlib.util.spec_from_file_location("user_script", script_path)
-    script = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(script)
-  
-
-    cases = script.run()
-    print("cases:", cases.keys())
-
-    for case_name, (state, mutate) in cases.items():
-        print(f"\nCASE: {case_name.upper()}")
-
-        snap_a = take_snapshot(f"{case_name} - before", state)
-
-        mutate()  # mutation between snapshots
-
-        snap_b = take_snapshot(f"{case_name} - after", state)
-
-        d = diff(snap_a, snap_b)
-
-        print_all(snap_a, snap_b, d, args.json)
+    run_case(
+        "Nested Mutability Case",
+        script.nested_make,
+        script.nested_change,
+        json_out
+    )
 
 
 if __name__ == "__main__":
