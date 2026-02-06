@@ -1,9 +1,9 @@
-Python Memory Model – Heap Snapshot Engine (memcourt)
+## Python Memory Model ##
 
 
 Overview
 `memcourt` is a lightweight diagnostic tool designed to prove how Python handles object references in memory. 
-## 🚀 Key Features
+## Key Features
 * **Heap Snapshotting:** Capture the state of variables and their unique memory IDs.
 * **CLI Interface:** Run memory experiments directly from the terminal.
 * **JSON Support:** Export memory data for machine-readable analysis or external visualization.
@@ -28,7 +28,7 @@ technically correct and aligned with the task PDF.
 
 --------------------------------------------------
 
-PROBLEM STATEMENT
+## PROBLEM STATEMENT
 In Python, variables do not store values directly. They store references to
 objects in memory. This leads to behaviors such as:
 
@@ -42,9 +42,9 @@ The objective of this project is to:
 
 --------------------------------------------------
 
-CONCEPTS DEMONSTRATED
+## CONCEPTS DEMONSTRATED
 
-ALIASING
+# ALIASING
 Aliasing occurs when multiple variables refer to the same object in memory.
 
 Example:
@@ -58,7 +58,7 @@ Evidence:
 - Same object id()
 - Mutation visible through all aliases
 
-NESTED MUTABILITY
+# NESTED MUTABILITY
 Nested mutability occurs when a mutable object exists inside an immutable one.
 
 Example:
@@ -76,7 +76,7 @@ Evidence:
 
 --------------------------------------------------
 
-PROJECT STRUCTURE
+## PROJECT STRUCTURE
 
 Python-Memory-Model/
 |
@@ -91,38 +91,6 @@ Python-Memory-Model/
 
 --------------------------------------------------
 
-MEMCOURT STRUCTURE GRAPH (ARCHITECTURE VIEW)
-
-This diagram shows how the memcourt package components interact.
-
-                +----------------+
-                |   examples.py  |
-                |  (test cases)  |
-                +--------+-------+
-                         |
-                         v
-+----------------+   +------------------+
-|  snapshot.py   |-->|   Snapshot       |
-| take_snapshot  |   | (heap state)     |
-+--------+-------+   +------------------+
-         |
-         v
-+----------------+
-|    diff.py     |
-| compare A / B  |
-+--------+-------+
-         |
-         v
-+----------------+
-|    cli.py      |
-| output / JSON  |
-+--------+-------+
-         |
-         v
-+----------------+
-|    main.py     |
-| CLI timeline  |
-+----------------+
 
 Control Flow:
 main.py loads examples.py
@@ -134,7 +102,7 @@ cli.py displays evidence
 
 --------------------------------------------------
 
-MODULE RESPONSIBILITIES
+## MODULE RESPONSIBILITIES
 
 snapshot.py
 - Defines the Snapshot class
@@ -164,7 +132,7 @@ main.py
 
 --------------------------------------------------
 
-SNAPSHOT DESIGN
+## SNAPSHOT DESIGN
 
 A snapshot is a passive representation of heap state at a moment in time.
 It does not perform analysis.
@@ -176,7 +144,7 @@ Each snapshot entry contains:
 
 --------------------------------------------------
 
-DIFF DESIGN
+## DIFF DESIGN
 
 Diffing is a separate analytical step that compares two snapshots to detect:
 
@@ -188,7 +156,7 @@ conceptual pipeline described in the task PDF.
 
 --------------------------------------------------
 
-CLI USAGE
+## CLI USAGE
 
 Activate the Conda environment:
 conda activate memory
@@ -201,7 +169,7 @@ python main.py analyze examples.py --json
 
 --------------------------------------------------
 
-OUTPUT INTERPRETATION
+## OUTPUT INTERPRETATION
 
 - Aliasing detected: multiple variable names share the same object id
 - Mutation detected: value differs between snapshots
@@ -228,14 +196,6 @@ KEY TAKEAWAYS
 
 --------------------------------------------------
 
-FUTURE EXTENSIONS
-
-- Garbage collector reference graph analysis
-- Snapshot diff as a class method
-- Deep vs shallow copy demonstrations
-- Heap visualization
-
---------------------------------------------------
 
 CONCLUSION
 
