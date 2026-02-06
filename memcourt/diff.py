@@ -21,7 +21,7 @@ def diff(snapshot_a, snapshot_b):
         if len(names) > 1:
             result["aliasing"].append(names)
 
-    # ---- Mutation detection ----
+    # Mutation detection
     for name in before:
         if before[name]["value"] != after[name]["value"]:
             result["mutations"].append({
