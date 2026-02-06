@@ -1,7 +1,7 @@
 # examples.py
 
 def run():
-    # -------- Aliasing --------
+    #  Aliasing 
     a = [1, 2]
     b = a
 
@@ -10,7 +10,7 @@ def run():
     def alias_mutate():
         a.append(99)
 
-    # -------- Nested Mutability --------
+    #  Nested Mutability 
     t = ([1, 2], [3, 4])
     inner = t[0]
 
