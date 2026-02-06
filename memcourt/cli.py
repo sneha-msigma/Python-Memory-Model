@@ -1,38 +1,28 @@
 # memcourt/cli.py
 
-
 import json
 
-def print_all(snapshot_a, snapshot_b, diff_result, as_json=False):
-    if as_json:
+
+def show(before, after, diff, json_out=False):
+    if json_out:
         print(json.dumps({
-            "snapshot_before": snapshot_a.__dict__,
-            "snapshot_after": snapshot_b.__dict__,
-            "diff": diff_result
+            "before": before.items,
+            "after": after.items,
+            "analysis": diff
         }, indent=2))
         return
 
-    print(f"\nSNAPSHOT A: {snapshot_a.tag}")
-    for obj in snapshot_a.objects:
-        print(obj)
+    print("\nSNAPSHOT BEFORE")
+    for i in before.items:
+        print(i)
 
-    print(f"\nSNAPSHOT B: {snapshot_b.tag}")
-    for obj in snapshot_b.objects:
-        print(obj)
+    print("\nSNAPSHOT AFTER")
+    for i in after.items:
+        print(i)
 
-    print("\nDIFF RESULT")
-    print("-" * 30)
+    print("\nANALYSIS")
+    print("Aliasing detected:", diff["aliasing"])
+    print("Nested mutability detected:", diff["nested_mutation"])
 
-    if diff_result["aliasing"]:
-        print("Aliasing detected:")
-        for group in diff_result["aliasing"]:
-            print("  ->", group)
-    else:
-        print("No aliasing detected.")
-
-    if diff_result["mutations"]:
-        print("\nMutations detected:")
-        for m in diff_result["mutations"]:
-            print(f"  {m['variable']}: {m['before']} -> {m['after']}")
-    else:
-        print("\nNo mutations detected.")
+    if diff["details"]:
+        print("Mutated variables:", diff["details"])
