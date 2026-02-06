@@ -3,13 +3,6 @@
 
 Overview
 `memcourt` is a lightweight diagnostic tool designed to prove how Python handles object references in memory. 
-## Key Features
-* **Heap Snapshotting:** Capture the state of variables and their unique memory IDs.
-* **CLI Interface:** Run memory experiments directly from the terminal.
-* **JSON Support:** Export memory data for machine-readable analysis or external visualization.
-* **Educational Examples:** Built-in demonstrations of common Python memory pitfalls.
-
-
 
 This project implements a minimal Heap Snapshot Engine and CLI in Python to
 demonstrate and prove two core Python memory model concepts:
@@ -23,8 +16,7 @@ By capturing "snapshots" of variable memory addresses (`id()`), it provides visu
 The system captures before-and-after heap snapshots, compares them, and reports
 evidence using object identity (id()) and value changes.
 
-The implementation is intentionally simple and beginner-friendly while remaining
-technically correct and aligned with the task PDF.
+
 
 --------------------------------------------------
 
