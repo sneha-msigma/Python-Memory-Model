@@ -1,27 +1,44 @@
 # memcourt/snapshot.py
 
+import gc
+
+
 class Snapshot:
-    """
-    Represents a heap snapshot at a specific moment.
-    """
+    def __init__(self, data):
+        self.items = []
+        self._capture(data)
 
-    def __init__(self, tag, objects):
-        self.tag = tag
-        self.objects = objects
+    def _capture(self, data):
+        for name, obj in data.items():
+            self.items.append({
+                "name": name,
+                "id": id(obj),
+                "value": repr(obj),
+                "refs": len(gc.get_referents(obj))
+            })
 
+    def diff(self, other):
+        result = {
+            "aliasing": False,
+            "nested_mutation": False,
+            "details": []
+        }
 
-def take_snapshot(tag, data_dict):
-    """
-    Capture variable names, object ids, and values.
-    """
-    objects = []
+        before_map = {i["name"]: i for i in self.items}
+        after_map = {i["name"]: i for i in other.items}
 
-    for name, obj in data_dict.items():
-        objects.append({
-            "name": name,
-            "id": id(obj),
-            "value": repr(obj)
-        })
+        # Aliasing check
+        ids = [i["id"] for i in self.items]
+        if len(ids) != len(set(ids)):
+            result["aliasing"] = True
 
-    return Snapshot(tag, objects)
+        # Nested mutability check
+        for name in before_map:
+            if name in after_map:
+                b = before_map[name]
+                a = after_map[name]
+                if b["id"] == a["id"] and b["value"] != a["value"]:
+                    result["nested_mutation"] = True
+                    result["details"].append(name)
 
+        return result
