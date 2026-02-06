@@ -17,18 +17,19 @@ def main():
 
     args = parser.parse_args()
 
-    # ---- LOAD SCRIPT BY FILE PATH (IMPORTANT FIX) ----
+    # LOAD SCRIPT BY FILE PATH (IMPORTANT FIX) 
     script_path = os.path.abspath(args.script)
 
     spec = importlib.util.spec_from_file_location("user_script", script_path)
     script = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(script)
-    # -------------------------------------------------
+  
 
     cases = script.run()
+    print("cases:", cases.keys())
 
     for case_name, (state, mutate) in cases.items():
-        print(f"\n===== CASE: {case_name.upper()} =====")
+        print(f"\nCASE: {case_name.upper()}")
 
         snap_a = take_snapshot(f"{case_name} - before", state)
 
