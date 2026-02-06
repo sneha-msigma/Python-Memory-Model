@@ -24,3 +24,4 @@ def take_snapshot(tag, data_dict):
         })
 
     return Snapshot(tag, objects)
+
