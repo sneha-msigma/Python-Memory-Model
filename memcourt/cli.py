@@ -1,5 +1,6 @@
 # memcourt/cli.py
 
+
 import json
 
 def print_all(snapshot_a, snapshot_b, diff_result, as_json=False):
